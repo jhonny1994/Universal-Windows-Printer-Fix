@@ -26,12 +26,12 @@ Run one of the following commands in PowerShell (Admin) to launch the tool direc
 
 **Method A (Modern):**
 ```powershell
-irm [https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1](https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1) | iex
+irm https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1 | iex
 ```
 
 **Method B (Standard):**
 ```powershell
-iwr -useb [https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1](https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1) | iex
+iwr -useb https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1 | iex
 ```
 
 ### Option 2: Manual Download
