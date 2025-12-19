@@ -14,11 +14,18 @@
     Min PowerShell: v5.1
 #>
 
-# 1. SELF-ELEVATION CHECK
+# 1. SELF-ELEVATION (RAM & FILE SAFE)
 # --------------------------------------------------------
-if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Warning "Admin privileges required. Elevating..."
-    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Warning "Admin privileges required. Reloading..."
+    
+    if ($PSCommandPath) {
+        # CASE A: Running from a physical file -> Relaunch the file
+        Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    } else {
+        # CASE B: Running from RAM (IRM) -> Relaunch the Download Command
+        Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1 | iex`"" -Verb RunAs
+    }
     Exit
 }
 
