@@ -12,18 +12,31 @@ Networking printing on modern Windows can be frustrating due to security changes
 
 * **🌍 Universal Compatibility:** Built with UTF-8 encoding and System SIDs. It works flawlessly on **any** language version of Windows (English, French, Arabic, Chinese, etc.).
 * **🛡️ Smart Security:** Implements **Profile-Aware Protection**. Firewall ports (135/139/445) are opened *only* for Private/Trusted networks. They automatically close on Public Wi-Fi to keep you safe.
+* **🚫 Compatibility Guards:** Automatically detects unsupported OS versions (Windows 7/8.1) and aborts execution to prevent system damage.
 * **↩️ Automatic Backups:** Safety is default. A full registry backup of your printer subsystem is saved to your Desktop before any changes are made.
 * **👴 Legacy Hardware Support:** Silently enables **SMB 1.0** for older printers (e.g., Canon LBP, HP LaserJet 1020) that refuse to work on Windows 11.
 * **🧠 Intelligent IP Detection:** Filters out VPNs, VM adapters, and Loopbacks to instantly display the correct LAN IP address you need to connect.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Installation & Usage
 
-No installation required. Just download and run.
+### Option 1: Run via Terminal (Recommended)
+Run one of the following commands in PowerShell (Admin) to launch the tool directly from memory without downloading files:
 
-1.  **Download** the latest `.bat` release.
-2.  **Right-Click** the file and select **Run as Administrator**.
+**Method A (Modern):**
+```powershell
+irm [https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1](https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1) | iex
+```
+
+**Method B (Standard):**
+```powershell
+iwr -useb [https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1](https://raw.githubusercontent.com/jhonny1994/Universal-Windows-Printer-Fix/main/FixPrinters.ps1) | iex
+```
+
+### Option 2: Manual Download
+1.  **Download** the latest `FixPrinters.ps1` release.
+2.  **Right-Click** the file and select **Run with PowerShell**.
 3.  Select your mode:
     * **[1] HOST:** For the PC physically connected to the printer via USB.
     * **[2] CLIENT:** For the PC trying to print over Wi-Fi/LAN.
@@ -32,15 +45,15 @@ No installation required. Just download and run.
 
 ---
 
-## 🔧 Under the Hood
+## 🔧 Technical Details
 
 When executed, this tool automates a 7-step remediation process:
 
 | Step | Operation | Technical Detail |
 | :--- | :--- | :--- |
-| **1** | **RPC Protocol** | Enforces `RpcUseNamedPipeProtocol` and `RpcProtocols = 0x7`. |
-| **2** | **Error 0x709 Fix** | Adjusts `RpcAuthnLevelPrivacyEnabled` to permit remote connection handshakes. |
-| **3** | **Driver Policy** | Relaxes `PointAndPrint` restrictions so clients can download drivers without Admin prompts. |
+| **1** | **OS Check** | Verifies Kernel >= 10.0 (Win 10/11) and PowerShell >= 5.1. |
+| **2** | **RPC Protocol** | Enforces `RpcUseNamedPipeProtocol` and `RpcProtocols = 0x7`. |
+| **3** | **Error 0x709 Fix** | Adjusts `RpcAuthnLevelPrivacyEnabled` to permit remote connection handshakes. |
 | **4** | **Firewall** | Creates a `Private-Only` rule allowing TCP 135, 139, 445. |
 | **5** | **Discovery** | Restarts `FDResPub` & `SSDPSRV` services to make the PC visible in "Network". |
 | **6** | **Deep Clean** | Removes stale credentials for local IP ranges (`192.168.x`, `10.x`, `172.x`) to force fresh auth. |
