@@ -76,20 +76,7 @@ $OSName = (Get-CimInstance Win32_OperatingSystem).Caption
 Write-Log "INFO" "Script Initialized."
 Write-Log "INFO" "OS Verification Passed: $OSName"
 
-# 4. BACKUP ROUTINE
-# --------------------------------------------------------
-if (!(Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir | Out-Null }
-Write-Host "`n [!] Creating Registry Backups..." -ForegroundColor Yellow
-
-try {
-    reg export "HKLM\SYSTEM\CurrentControlSet\Control\Print" "$BackupDir\Print_System_Backup.reg" /y | Out-Null
-    reg export "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Printers" "$BackupDir\Print_Policy_Backup.reg" /y | Out-Null
-    Write-Log "INFO" "Registry Backup Saved to: $BackupDir"
-} catch {
-    Write-Log "WARN" "Backup failed. Proceeding with caution."
-}
-
-# 5. USER MENU
+# 4. USER MENU (NO ACTIONS YET)
 # --------------------------------------------------------
 Write-Host "`n=================================================================" -ForegroundColor Cyan
 Write-Host "      UNIVERSAL GLOBAL PRINTER FIX" -ForegroundColor White
@@ -106,7 +93,20 @@ switch ($Choice) {
     "3" { $Role = "HYBRID" }
     Default { $Role = "HYBRID"; Write-Log "WARN" "Invalid input. Defaulting to HYBRID." }
 }
-Write-Log "INFO" "Selected Role: $Role"
+Write-Log "INFO" "User Selected Role: $Role"
+
+# 5. BACKUP ROUTINE (RUNS ONLY AFTER SELECTION)
+# --------------------------------------------------------
+Write-Host "`n [!] Creating Registry Backups..." -ForegroundColor Yellow
+if (!(Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir | Out-Null }
+
+try {
+    reg export "HKLM\SYSTEM\CurrentControlSet\Control\Print" "$BackupDir\Print_System_Backup.reg" /y | Out-Null
+    reg export "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Printers" "$BackupDir\Print_Policy_Backup.reg" /y | Out-Null
+    Write-Log "INFO" "Registry Backup Saved to: $BackupDir"
+} catch {
+    Write-Log "WARN" "Backup failed. Proceeding with caution."
+}
 
 # 6. CORE FIXES (REGISTRY & PROTOCOLS)
 # --------------------------------------------------------
